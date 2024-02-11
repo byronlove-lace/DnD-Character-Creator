@@ -7,6 +7,7 @@ using std::vector;
 using std::array;
 
 constexpr size_t CHOICE_COUNT = 7;
+constexpr size_t ENTRY_CAP = 100;
 
 array <const char *, CHOICE_COUNT> choices  =
 {
@@ -18,6 +19,17 @@ array <const char *, CHOICE_COUNT> choices  =
         "Alignment:",
         "Experience Points:",
 };
+
+typedef struct Character
+{
+        char name[ENTRY_CAP];
+        unsigned short lvl;
+        char cls[ENTRY_CAP];
+        char race[ENTRY_CAP];
+        char background[ENTRY_CAP];
+        char alignment[ENTRY_CAP];
+        unsigned int xp;
+} Character;
 
 array <WINDOW *, CHOICE_COUNT> menu;
 array <WINDOW *, CHOICE_COUNT> inputMenu;
@@ -34,6 +46,8 @@ int main (int argc, char *argv[])
 
         int key;
         int selection = 0;
+
+        Character newChar;
 
         init_ncurses();
         refresh();
@@ -64,6 +78,35 @@ int main (int argc, char *argv[])
                                         highlight_selection(--selection); 
                                 }
                                 break; 
+                                
+                                // Enter
+                        case 10: 
+                                echo();
+                                switch(selection)
+                                {
+                                        case 0:
+                                                mvwscanw(inputMenu[0], 1, 1, "%s", newChar.name);
+                                                break;
+                                        case 1:
+                                                mvwscanw(inputMenu[1], 1, 1, "%hu", &newChar.lvl);
+                                                break;
+                                        case 2:
+                                                mvwscanw(inputMenu[2], 1, 1, "%s", newChar.cls);
+                                                break;
+                                        case 3:
+                                                mvwscanw(inputMenu[3], 1, 1, "%s", newChar.race);
+                                                break;
+                                        case 4:
+                                                mvwscanw(inputMenu[4], 1, 1, "%s", newChar.background);
+                                                break;
+                                        case 5:
+                                                mvwscanw(inputMenu[5], 1, 1, "%s", newChar.alignment);
+                                                break;
+                                        case 6:
+                                                mvwscanw(inputMenu[6], 1, 1, "%u", &newChar.xp);
+                                                break;
+                                }
+                                noecho();
                 }
         } while ((key != 'q') && (key != 'Q'));
 
